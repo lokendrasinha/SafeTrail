@@ -11,7 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      # =========================
       # NODE SETUP
+      # =========================
       - name: Use Node 20
         uses: actions/setup-node@v4
         with:
@@ -20,22 +22,36 @@ jobs:
       - name: Check Node Version
         run: node -v
 
+      # =========================
       # FRONTEND
+      # =========================
       - name: Build Frontend
         working-directory: frontend
         run: |
           npm install
           npm run build
 
+      # =========================
       # PYTHON SETUP
+      # =========================
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
 
+      # =========================
       # BACKEND
+      # =========================
       - name: Backend Check
         working-directory: backend
         run: |
           pip install -r requirements.txt
           python -m compileall .
+
+      # =========================
+      # 🐳 DOCKER CHECK (NEW)
+      # =========================
+      - name: Build Docker Image
+        working-directory: backend
+        run: |
+          docker build -t safetrail-backend .
