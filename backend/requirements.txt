@@ -8,4 +8,5 @@ passlib
 python-jose
 bcrypt
 langchain
+langchain_groq
 httpx
