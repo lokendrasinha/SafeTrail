@@ -10,3 +10,4 @@ bcrypt
 langchain
 langchain_groq
 httpx
+tavily-python
