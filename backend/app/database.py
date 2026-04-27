@@ -17,6 +17,8 @@ async def connect_to_mongo():
     client = AsyncIOMotorClient(MONGO_URI)
     db = client["safetrail"]  # Database name
     print("✅ Connected to MongoDB")
+    print("🔍 Connecting to Mongo...")
+    print("MONGO_URI:", os.getenv("MONGO_URI"))
 
 
 async def close_mongo_connection():
