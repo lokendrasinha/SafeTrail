@@ -1,29 +1,28 @@
-name: Simple CI
+name: CI Fix
 
 on:
   push:
     branches: ["main"]
 
 jobs:
-  check:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout code
       - uses: actions/checkout@v3
 
-      # 🔥 FORCE NODE 20 (IMPORTANT)
-      - name: Setup Node
+      # FORCE NODE 20
+      - name: Use Node 20
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: "20"
 
-      # 🔍 VERIFY NODE VERSION (VERY IMPORTANT)
+      # DEBUG (IMPORTANT)
       - name: Check Node Version
         run: node -v
 
       # FRONTEND
-      - name: Install & Build Frontend
+      - name: Build Frontend
         run: |
           cd frontend
           npm install
@@ -33,9 +32,9 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.10
+          python-version: "3.10"
 
-      - name: Install & Check Backend
+      - name: Backend Check
         run: |
           cd backend
           pip install -r requirements.txt
