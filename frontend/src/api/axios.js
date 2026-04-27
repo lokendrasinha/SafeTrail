@@ -25,14 +25,11 @@ api.interceptors.response.use(
     const isLoginRequest =
       error.config?.url?.includes("/auth/login");
 
-    // ❗ Only redirect if NOT login request
+    // ❗ Only clear token, DO NOT redirect
     if (error.response?.status === 401 && !isLoginRequest) {
-      console.warn("Session expired — logging out");
+      console.warn("Session expired — clearing token");
 
       localStorage.removeItem("token");
-
-      // safer redirect
-      window.location.replace("/login");
     }
 
     return Promise.reject(error);
