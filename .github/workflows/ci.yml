@@ -1,0 +1,79 @@
+name: SafeTrail CI Pipeline
+
+on:
+  pull_request:
+    branches: ["main"]   # runs BEFORE merge
+  push:
+    branches: ["main"]   # runs after merge (optional)
+
+jobs:
+
+  # =========================
+  # FRONTEND VALIDATION
+  # =========================
+  frontend:
+    name: Frontend Build Check
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build frontend
+        run: npm run build
+
+  # =========================
+  # BACKEND VALIDATION
+  # =========================
+  backend:
+    name: Backend Validation
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Syntax check
+        run: python -m py_compile $(git ls-files '*.py')
+
+  # =========================
+  # DOCKER VALIDATION
+  # =========================
+  docker:
+    name: Docker Build Check
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build -t safetrail-backend .
