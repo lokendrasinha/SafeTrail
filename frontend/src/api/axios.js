@@ -18,15 +18,23 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// ⚠️ Optional: handle global errors (like token expired)
+// ⚠️ Handle ONLY protected route failures
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      console.warn("Unauthorized — logging out");
+    const isLoginRequest =
+      error.config?.url?.includes("/auth/login");
+
+    // ❗ Only redirect if NOT login request
+    if (error.response?.status === 401 && !isLoginRequest) {
+      console.warn("Session expired — logging out");
+
       localStorage.removeItem("token");
-      window.location.href = "/login";
+
+      // safer redirect
+      window.location.replace("/login");
     }
+
     return Promise.reject(error);
   }
 );
