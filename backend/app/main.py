@@ -2,10 +2,22 @@ from fastapi import FastAPI
 from app.database import connect_to_mongo, close_mongo_connection
 from app.routers.auth import router as auth_router
 from app.routers.itinerary import router as itinerary_router
+from fastapi.middleware.cors import CORSMiddleware
+
+
 
 
 
 app = FastAPI()
+
+# CORS configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def root():
